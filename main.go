@@ -13,8 +13,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-
-	ddTracer "gopkg.in/DataDog/dd-trace-go.v1/ddtrace/tracer"
 )
 
 func init() {
@@ -23,9 +21,6 @@ func init() {
 
 // SaveToPNG is used to convert a page from a PDF file to PNG.
 func SaveToPNG(ctx context.Context, page, width uint16, scale float32, rawPayload io.Reader, output io.Writer) (err error) {
-	span, _ := ddTracer.StartSpanFromContext(ctx, "lazypdf.SaveToPNG")
-	defer func() { span.Finish(ddTracer.WithError(err)) }()
-
 	if rawPayload == nil {
 		return errors.New("payload can't be nil")
 	}
@@ -61,9 +56,6 @@ func SaveToPNG(ctx context.Context, page, width uint16, scale float32, rawPayloa
 
 // PageCount is used to return the page count of the document.
 func PageCount(ctx context.Context, rawPayload io.Reader) (_ int, err error) {
-	span, _ := ddTracer.StartSpanFromContext(ctx, "lazypdf.PageCount")
-	defer func() { span.Finish(ddTracer.WithError(err)) }()
-
 	if rawPayload == nil {
 		return 0, errors.New("payload can't be nil")
 	}
